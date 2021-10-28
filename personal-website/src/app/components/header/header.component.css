@@ -1,0 +1,23 @@
+#header-component {
+  border: var(--temp-component-border-width);
+  border-style: var(--temp-component-border-style);
+}
+
+#header-component .component-title {
+  font-size: var(--temp-component-title-font-size);
+  display: var(--temp-component-title-display);
+}
+
+/* @media all and (min-width: 500px) {
+  .navbar .nav-item .dropdown-menu {
+    display: none;
+  }
+  .navbar .nav-item:hover .nav-link {
+  }
+  .navbar .nav-item:hover .dropdown-menu {
+    display: block;
+  }
+  .navbar .nav-item .dropdown-menu {
+    margin-top: 0;
+  }
+} */

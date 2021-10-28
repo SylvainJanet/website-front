@@ -1,0 +1,9 @@
+#not-found-component {
+  border: var(--temp-component-border-width);
+  border-style: var(--temp-component-border-style);
+}
+
+#not-found-component .component-title {
+  font-size: var(--temp-component-title-font-size);
+  display: var(--temp-component-title-display);
+}

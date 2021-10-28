@@ -1,0 +1,13 @@
+.breadcrumb {
+  margin-top:0px;
+}
+
+#app-bread-crumbs-component {
+  border:var(--temp-component-border-width);
+  border-style:var(--temp-component-border-style)
+}
+
+#app-bread-crumbs-component .component-title {
+  font-size:var(--temp-component-title-font-size);
+  display: var(--temp-component-title-display);
+}

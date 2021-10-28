@@ -1,0 +1,90 @@
+<div id="header-component">
+  <p class="header-title">header works!</p>
+
+  <button
+    *ngFor="let language of otherLanguages"
+    (click)="changeLanguage(language)"
+  >
+    {{ language }}
+  </button>
+
+  <div class="row">
+    <div class="col">
+      <span
+        *ngFor="let item of menu.items"
+        ngbDropdown
+        (mouseenter)="$event.stopPropagation(); myDrop.open()"
+        #myDrop="ngbDropdown"
+        (mouseleave)="
+          $event.stopPropagation(); !subsubMenuOpen ? myDrop.close() : ''
+        "
+      >
+        <span
+          *ngIf="item.subitems.length > 0; else normalbutton"
+          class="d-inline-block"
+        >
+          <button
+            class="btn btn-outline-primary"
+            id="dropdownBasic1"
+            ngbDropdownAnchor
+            (click)="categoryClick(item)"
+          >
+            {{ getTitle(item) }}
+          </button>
+          <span ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <span
+              *ngFor="let nbr of item.subitems"
+              #myDrop2="ngbDropdown"
+              ngbDropdown
+              (mouseenter)="
+                $event.stopPropagation(); myDrop2.open(); switchsubsubMenuOpen()
+              "
+              (mouseleave)="
+                $event.stopPropagation();
+                myDrop2.close();
+                switchsubsubMenuOpen()
+              "
+            >
+              <span
+                *ngIf="
+                  getActualMainMenuItem(nbr).subitems.length > 0;
+                  else normalbutton2
+                "
+                class="d-inline-block"
+              >
+                <button
+                  class="btn btn-outline-primary"
+                  id="dropdownBasic2"
+                  ngbDropdownAnchor
+                  (click)="categoryClick(nbr)"
+                >
+                  {{ getTitleById(nbr) }}
+                </button>
+                <span ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                  <span *ngFor="let myvar of subItems(nbr)">
+                    <button (click)="categoryClick(myvar)">
+                      {{ getTitleById(myvar) }}
+                    </button>
+                  </span>
+                </span>
+              </span>
+              <ng-template #normalbutton2>
+                <button
+                  class="btn btn-outline-primary"
+                  (click)="categoryClick(nbr)"
+                >
+                  {{ getTitleById(nbr) }}
+                </button>
+              </ng-template>
+            </span>
+          </span>
+        </span>
+        <ng-template #normalbutton>
+          <button class="btn btn-outline-primary" (click)="categoryClick(item)">
+            {{ getTitle(item) }}
+          </button>
+        </ng-template>
+      </span>
+    </div>
+  </div>
+</div>
