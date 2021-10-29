@@ -1,0 +1,14 @@
+<div id="app-bread-crumbs-component">
+  <p class = "component-title">bread-crumbs works!</p>
+  <ol class="breadcrumb">
+    <li *ngFor="let breadcrumb of breadcrumbs"
+        class="breadcrumb-item">
+      <a [routerLink]="[breadcrumb.url]">
+        {{ breadcrumb.label }}
+      </a>
+    </li>
+  </ol>
+</div>
+
+
+

@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+:root {
+  --temp-component-border-width: 1px;
+  --temp-component-border-style: solid;
+  --temp-component-title-font-size: 0.5em;
+  --temp-component-title-display: block;
+  /* --temp-component-border-width: 0px;
+  --temp-component-border-style: none;
+  --temp-component-title-font-size: 1em;
+  --temp-component-title-display: none; */
+}
