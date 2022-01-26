@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebpageCategoryMain } from 'src/model/webpageCategoryMain';
+import { Page } from 'src/model/page';
 
 @Component({
   selector: 'app-page',
@@ -7,12 +7,12 @@ import { WebpageCategoryMain } from 'src/model/webpageCategoryMain';
   styleUrls: ['./page.component.css'],
 })
 export class PageComponent implements OnInit {
-  page: WebpageCategoryMain = new WebpageCategoryMain();
+  page: Page = new Page();
   constructor() {}
 
   ngOnInit(): void {}
 
-  test(event: WebpageCategoryMain) {
+  test(event: Page) {
     this.page = event;
   }
 }

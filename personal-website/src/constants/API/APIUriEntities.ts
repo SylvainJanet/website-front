@@ -26,23 +26,23 @@ export function staticImplements<T>() {
 // }
 
 @staticImplements<APIURIController>()
-export class APIURILanguagedString {
-  static readonly CONTROLLER = 'api/languagedstring';
+export class APIURILocalizedString {
+  static readonly CONTROLLER = 'api/localizedstring';
 }
 
 @staticImplements<APIURIController>()
-export class APIURIWebpageCategoryMain {
-  static readonly CONTROLLER = 'api/webpageCategoryMain';
+export class APIURIPage {
+  static readonly CONTROLLER = 'api/page';
 }
 
 @staticImplements<APIURIController>()
-export class APIURIWebsiteMainMenu {
-  static readonly CONTROLLER = 'api/websiteMainMenu';
+export class APIURIMenu {
+  static readonly CONTROLLER = 'api/menu';
 }
 
 @staticImplements<APIURIController>()
-export class APIURIWebsiteMainMenuItem {
-  static readonly CONTROLLER = 'api/websiteMainMenuItem';
+export class APIURIMenuItem {
+  static readonly CONTROLLER = 'api/menuItem';
   static readonly GETALL_LEVEL1 = 'l1';
   static readonly GETALL_LEVEL2 = 'l2';
 }

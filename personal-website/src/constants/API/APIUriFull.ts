@@ -2,10 +2,10 @@ import { staticImplements } from 'src/model/entity';
 import { APIUriCRUD } from './APIUriCRUD';
 import {
   APIURIController,
-  APIURILanguagedString,
-  APIURIWebpageCategoryMain,
-  APIURIWebsiteMainMenu,
-  APIURIWebsiteMainMenuItem,
+  APIURILocalizedString,
+  APIURIPage,
+  APIURIMenu,
+  APIURIMenuItem,
 } from './APIUriEntities';
 import { APIUrisInitDB } from './APIUriOther';
 
@@ -44,33 +44,29 @@ export interface APIFullURICRUD {
 }
 
 @staticImplements<APIFullURICRUD>()
-export class APIFullURILanguagedString {
-  static readonly GETALL = APIFullUriGeneric.getAll(APIURILanguagedString);
+export class APIFullURILocalizedString {
+  static readonly GETALL = APIFullUriGeneric.getAll(APIURILocalizedString);
 }
 
 @staticImplements<APIFullURICRUD>()
-export class APIFullURIWebpageCategoryMain {
-  static readonly GETALL = APIFullUriGeneric.getAll(APIURIWebpageCategoryMain);
+export class APIFullURIPage {
+  static readonly GETALL = APIFullUriGeneric.getAll(APIURIPage);
 }
 
 @staticImplements<APIFullURICRUD>()
-export class APIFullURIWebsiteMainMenu {
-  static readonly GETALL = APIFullUriGeneric.getAll(APIURIWebsiteMainMenu);
+export class APIFullURIMenu {
+  static readonly GETALL = APIFullUriGeneric.getAll(APIURIMenu);
 }
 
 @staticImplements<APIFullURICRUD>()
-export class APIFullURIWebsiteMainMenuItem {
-  static readonly GETALL = APIFullUriGeneric.getAll(APIURIWebsiteMainMenuItem);
+export class APIFullURIMenuItem {
+  static readonly GETALL = APIFullUriGeneric.getAll(APIURIMenuItem);
 
   static readonly GETALL_LEVEL1 = clean(
-    APIURIWebsiteMainMenuItem.CONTROLLER +
-      '/' +
-      APIURIWebsiteMainMenuItem.GETALL_LEVEL1
+    APIURIMenuItem.CONTROLLER + '/' + APIURIMenuItem.GETALL_LEVEL1
   );
 
   static readonly GETALL_LEVEL2 = clean(
-    APIURIWebsiteMainMenuItem.CONTROLLER +
-      '/' +
-      APIURIWebsiteMainMenuItem.GETALL_LEVEL2
+    APIURIMenuItem.CONTROLLER + '/' + APIURIMenuItem.GETALL_LEVEL2
   );
 }
