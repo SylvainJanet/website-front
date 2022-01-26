@@ -1,20 +1,20 @@
-import { SupportedLanguages } from './../../constants/languages/supportedLanguages';
+import { SupportedLanguage } from '../../constants/languages/supportedLanguage';
 import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LanguageService {
-  static currentLanguage: SupportedLanguages;
+  static currentLanguage: SupportedLanguage;
   constructor() {
-    LanguageService.currentLanguage = SupportedLanguages.FRENCH;
+    LanguageService.currentLanguage = SupportedLanguage.FRENCH;
   }
 
   getCurrentLanguage() {
     return LanguageService.currentLanguage;
   }
 
-  setCurrentLanguage(language: SupportedLanguages) {
+  setCurrentLanguage(language: SupportedLanguage) {
     LanguageService.currentLanguage = language;
   }
 }

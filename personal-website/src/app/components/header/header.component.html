@@ -1,90 +1,206 @@
 <div id="header-component">
-  <p class="header-title">header works!</p>
-
-  <button
-    *ngFor="let language of otherLanguages"
-    (click)="changeLanguage(language)"
+  <!--/ Nav Star /-->
+  <nav
+    class="navbar navbar-b navbar-trans navbar-expand-md fixed-top"
+    id="mainNav"
   >
-    {{ language }}
-  </button>
-
-  <div class="row">
-    <div class="col">
-      <span
-        *ngFor="let item of menu.items"
-        ngbDropdown
-        (mouseenter)="$event.stopPropagation(); myDrop.open()"
-        #myDrop="ngbDropdown"
-        (mouseleave)="
-          $event.stopPropagation(); !subsubMenuOpen ? myDrop.close() : ''
-        "
+    <div class="container">
+      <a class="navbar-brand js-scroll" href="#page-top">Sylvain Janet</a>
+      <button
+        class="navbar-toggler collapsed"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarDefault"
+        aria-controls="navbarDefault"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
       >
-        <span
-          *ngIf="item.subitems.length > 0; else normalbutton"
-          class="d-inline-block"
-        >
-          <button
-            class="btn btn-outline-primary"
-            id="dropdownBasic1"
-            ngbDropdownAnchor
-            (click)="categoryClick(item)"
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div
+        class="navbar-collapse collapse justify-content-end"
+        id="navbarDefault"
+      >
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link js-scroll active" href="#home">{{
+              getContent()
+            }}</a>
+          </li>
+          <li
+            class="nav-item dropdown"
+            *ngFor="let item of menu.items"
+            ngbDropdown
+            #myDrop="ngbDropdown"
           >
-            {{ getTitle(item) }}
-          </button>
-          <span ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <span
-              *ngFor="let nbr of item.subitems"
-              #myDrop2="ngbDropdown"
-              ngbDropdown
-              (mouseenter)="
-                $event.stopPropagation(); myDrop2.open(); switchsubsubMenuOpen()
-              "
-              (mouseleave)="
-                $event.stopPropagation();
-                myDrop2.close();
-                switchsubsubMenuOpen()
-              "
-            >
-              <span
-                *ngIf="
-                  getActualMainMenuItem(nbr).subitems.length > 0;
-                  else normalbutton2
-                "
-                class="d-inline-block"
+            <span *ngIf="item.subItems.length > 0; else normalbutton">
+              <div
+                style="height: fit-content"
+                (mouseenter)="enterMenu(item)"
+                (mouseleave)="exitMenu(item)"
               >
-                <button
-                  class="btn btn-outline-primary"
-                  id="dropdownBasic2"
-                  ngbDropdownAnchor
-                  (click)="categoryClick(nbr)"
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
                 >
-                  {{ getTitleById(nbr) }}
-                </button>
-                <span ngbDropdownMenu aria-labelledby="dropdownBasic2">
-                  <span *ngFor="let myvar of subItems(nbr)">
-                    <button (click)="categoryClick(myvar)">
-                      {{ getTitleById(myvar) }}
-                    </button>
-                  </span>
-                </span>
-              </span>
-              <ng-template #normalbutton2>
-                <button
-                  class="btn btn-outline-primary"
-                  (click)="categoryClick(nbr)"
+                  {{ getTitle(item) }}
+                </a>
+                <div
+                  class="dropdown-menu"
+                  style="
+                    margin: 0 0 0;
+                    padding: 1.12em;
+                    background-color: transparent;
+                  "
+                  [ngClass]="{ show: isShown(item) }"
+                  aria-labelledby="navbarDropdown"
+                  (mouseenter)="enterItems(item)"
+                  (mouseleave)="exitItems(item)"
                 >
-                  {{ getTitleById(nbr) }}
-                </button>
-              </ng-template>
+                  <div class="nav-item" *ngFor="let nbr of item.subItems">
+                    <span
+                      *ngIf="
+                        getActualMainMenuItem(nbr).subItems.length > 0;
+                        else normalbutton2
+                      "
+                      ><div
+                        style="height: fit-content"
+                        (mouseenter)="enterMenu(getActualMainMenuItem(nbr))"
+                        (mouseleave)="exitMenu(getActualMainMenuItem(nbr))"
+                      >
+                        <a
+                          class="nav-link dropdown-toggle"
+                          href="#"
+                          id="navbarDropdown"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          {{ getTitleById(nbr) }}
+                        </a>
+                        <div
+                          class="dropdown-menu"
+                          style="
+                            margin: 0 0 0;
+                            padding: 1.12em;
+                            background-color: transparent;
+                          "
+                          [ngClass]="{
+                            show: isShown(getActualMainMenuItem(nbr))
+                          }"
+                          aria-labelledby="navbarDropdown"
+                          (mouseenter)="enterItems(getActualMainMenuItem(nbr))"
+                          (mouseleave)="exitItems(getActualMainMenuItem(nbr))"
+                        >
+                          <div
+                            class="nav-item"
+                            *ngFor="let myvar of subItems(nbr)"
+                          >
+                            <button
+                              class="nav-link js-scroll"
+                              style="
+                                text-decoration: none;
+                                color: white;
+                                background-color: transparent;
+                                border: none;
+                              "
+                              (click)="categoryClick(myvar)"
+                            >
+                              {{ getTitleById(myvar) }}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </span>
+                    <ng-template #normalbutton2>
+                      <button
+                        class="nav-link js-scroll"
+                        style="
+                          text-decoration: none;
+                          color: white;
+                          background-color: transparent;
+                          border: none;
+                        "
+                        (click)="categoryClick(nbr)"
+                      >
+                        {{ getTitleById(nbr) }}
+                      </button>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
             </span>
-          </span>
-        </span>
-        <ng-template #normalbutton>
-          <button class="btn btn-outline-primary" (click)="categoryClick(item)">
-            {{ getTitle(item) }}
-          </button>
-        </ng-template>
-      </span>
+            <ng-template #normalbutton>
+              <button
+                class="nav-link js-scroll"
+                style="
+                  text-decoration: none;
+                  color: white;
+                  background-color: transparent;
+                  border: none;
+                "
+                (click)="categoryClick(item)"
+              >
+                {{ getTitle(item) }}
+              </button>
+            </ng-template>
+          </li>
+
+          <li class="nav-item dropdown">
+            <div
+              style="height: fit-content"
+              (mouseenter)="enterLanguageMenu()"
+              (mouseleave)="exitLanguageMenu()"
+            >
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Language
+              </a>
+
+              <div
+                class="dropdown-menu"
+                style="
+                  margin: 0 0 0;
+                  padding: 1.12em;
+                  background-color: transparent;
+                "
+                [ngClass]="{ show: isLanguageShown() }"
+                aria-labelledby="navbarDropdown"
+                (mouseenter)="enterLanguageItems()"
+                (mouseleave)="exitLanguageItems()"
+              >
+                <div class="nav-item" *ngFor="let language of otherLanguages">
+                  <button
+                    class="nav-link js-scroll"
+                    style="
+                      text-decoration: none;
+                      color: white;
+                      background-color: transparent;
+                      border: none;
+                    "
+                    (click)="changeLanguage(language)"
+                  >
+                    {{ language }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </nav>
+  <!--/ Nav End /-->
 </div>

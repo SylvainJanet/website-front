@@ -1,13 +1,19 @@
-import { WebsiteMainMenuItemService } from './../../../services/websiteMainMenuItemService/website-main-menu-item-service.service';
-import { SupportedLanguages } from './../../../constants/languages/supportedLanguages';
-import { WebsiteMainMenuItem } from './../../../model/websiteMainMenuItem';
+import { MenuItemService } from '../../../services/menuItemService/menu-item-service.service';
+import { SupportedLanguage } from '../../../constants/languages/supportedLanguage';
+import { MenuItem } from '../../../model/menuItem';
 import { LanguageService } from './../../../services/languageService/language.service';
 import { LogService } from './../../../services/log/log.service';
-import { WebsiteMainMenuDto } from './../../../interfaces/websiteMainMenuDto';
-import { WebsiteMainMenuService } from './../../../services/websiteMainMenuService/website-main-menu.service';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { WebsiteMainMenu } from 'src/model/websiteMainMenu';
-import { WebpageCategoryMain } from 'src/model/webpageCategoryMain';
+import { MenuDto } from '../../../interfaces/menuDto';
+import { MenuService } from '../../../services/websiteMainMenuService/menu.service';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  Renderer2,
+} from '@angular/core';
+import { Menu } from 'src/model/menu';
+import { Page } from 'src/model/page';
 import { isNgTemplate } from '@angular/compiler';
 
 @Component({
@@ -16,32 +22,33 @@ import { isNgTemplate } from '@angular/compiler';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  menu: WebsiteMainMenu = new WebsiteMainMenu();
+  menu: Menu = new Menu();
   log: LogService;
-  otherLanguages: SupportedLanguages[];
-  @Output() changeMenuItem = new EventEmitter<WebpageCategoryMain>();
-  allItems: WebsiteMainMenuItem[] = [];
+  otherLanguages: SupportedLanguage[];
+  @Output() changeMenuItem = new EventEmitter<Page>();
+  allItems: MenuItem[] = [];
   subsubMenuOpen: Boolean = false;
+  page: Page = new Page();
 
   constructor(
-    private websiteMainMenuService: WebsiteMainMenuService,
+    private menuService: MenuService,
     private logService: LogService,
     private languageService: LanguageService,
-    private websiteMainMenuItemService: WebsiteMainMenuItemService
+    private menuItemService: MenuItemService
   ) {
     this.log = logService.withClassName(HeaderComponent.name);
     this.otherLanguages = [];
     this.updateDisplay();
-    websiteMainMenuService.getAll().subscribe((m) => {
+    menuService.getAll().subscribe((m) => {
       if (m.entities) {
         this.log.debug('entities', m);
-        this.menu = WebsiteMainMenu.convertToEntity(m.entities[0]);
+        this.menu = Menu.convertToEntity(m.entities[0]);
       }
     });
-    websiteMainMenuItemService.getAll().subscribe((m) => {
+    menuItemService.getAll().subscribe((m) => {
       if (m.entities) {
         this.log.debug('entities', m);
-        this.allItems = WebsiteMainMenuItem.convertListToEntity(m.entities);
+        this.allItems = MenuItem.convertListToEntity(m.entities);
       }
     });
   }
@@ -52,59 +59,60 @@ export class HeaderComponent implements OnInit {
 
   updateDisplay() {
     this.otherLanguages = [];
-    for (const value of this.enumKeys(SupportedLanguages)) {
-      if (this.currentLanguage() != SupportedLanguages[value]) {
-        this.otherLanguages.push((<any>SupportedLanguages)[value]);
+    for (const value of this.enumKeys(SupportedLanguage)) {
+      if (this.currentLanguage() != SupportedLanguage[value]) {
+        this.otherLanguages.push((<any>SupportedLanguage)[value]);
       }
     }
   }
 
   ngOnInit(): void {}
 
-  currentLanguage(): SupportedLanguages {
+  currentLanguage(): SupportedLanguage {
     return this.languageService.getCurrentLanguage();
   }
 
-  getTitle(item: WebsiteMainMenuItem) {
-    return item.languagedTitle.strings.get(this.currentLanguage());
+  getTitle(item: MenuItem) {
+    return item.title.strings.get(this.currentLanguage());
   }
 
-  changeLanguage(language: SupportedLanguages) {
+  changeLanguage(language: SupportedLanguage) {
     this.languageService.setCurrentLanguage(language);
     this.updateDisplay();
   }
 
-  categoryClick(item: WebsiteMainMenuItem) {
+  categoryClick(item: MenuItem) {
     for (let it of this.allItems) {
       if (it && it.id && it.id == item.id) {
         item = it;
       }
     }
-    console.log(item.webpageCategoryMain);
-    this.changeMenuItem.emit(item.webpageCategoryMain);
+    console.log(item.page);
+    this.page = item.page;
+    this.changeMenuItem.emit(item.page);
   }
 
-  getActualMainMenuItem(el: WebsiteMainMenuItem): WebsiteMainMenuItem {
+  getActualMainMenuItem(el: MenuItem): MenuItem {
     for (let item of this.allItems) {
       if (item.id && item.id == el.id) {
         return item;
       }
     }
-    return new WebsiteMainMenuItem();
+    return new MenuItem();
   }
 
-  getTitleById(el: WebsiteMainMenuItem): string | undefined | null {
+  getTitleById(el: MenuItem): string | undefined | null {
     for (let item of this.allItems) {
       if (item.id && item.id == el.id) {
-        return item.languagedTitle.strings.get(this.currentLanguage());
+        return item.title.strings.get(this.currentLanguage());
       }
     }
     return null;
   }
 
-  subItems(el: WebsiteMainMenuItem) {
+  subItems(el: MenuItem) {
     let res = [];
-    let properEl = new WebsiteMainMenuItem();
+    let properEl = new MenuItem();
     for (let item of this.allItems) {
       if (item.id && item.id == el.id) {
         properEl = item;
@@ -113,7 +121,7 @@ export class HeaderComponent implements OnInit {
     for (let item of this.allItems) {
       if (
         item.id &&
-        properEl.subitems.map((wmmi) => wmmi.id).includes(item.id)
+        properEl.subItems.map((wmmi) => wmmi.id).includes(item.id)
       ) {
         res.push(item);
       }
@@ -122,5 +130,62 @@ export class HeaderComponent implements OnInit {
   }
   switchsubsubMenuOpen() {
     this.subsubMenuOpen = !this.subsubMenuOpen;
+  }
+
+  inMenu: Map<MenuItem, boolean> = new Map<MenuItem, boolean>();
+  inMenuItems: Map<MenuItem, boolean> = new Map<MenuItem, boolean>();
+  inLanguageMenu: boolean = false;
+  inLanguageMenuItems: boolean = false;
+
+  enterLanguageMenu() {
+    this.inLanguageMenu = true;
+  }
+
+  exitLanguageMenu() {
+    this.inLanguageMenu = false;
+  }
+
+  enterLanguageItems() {
+    this.inLanguageMenuItems = true;
+  }
+
+  exitLanguageItems() {
+    this.inLanguageMenuItems = false;
+  }
+
+  isLanguageShown() {
+    return this.inLanguageMenu || this.inLanguageMenuItems;
+  }
+
+  enterMenu(item: MenuItem) {
+    this.inMenu.set(item, true);
+  }
+
+  exitMenu(item: MenuItem) {
+    this.inMenu.set(item, false);
+  }
+
+  enterItems(item: MenuItem) {
+    this.inMenuItems.set(item, true);
+  }
+
+  exitItems(item: MenuItem) {
+    this.inMenuItems.set(item, false);
+  }
+
+  isShown(item: MenuItem) {
+    if (!this.inMenu.has(item)) {
+      return false;
+    }
+    if (!this.inMenuItems.has(item)) {
+      return this.inMenu.get(item);
+    }
+    return this.inMenu.get(item) || this.inMenuItems.get(item);
+  }
+
+  getContent() {
+    return this.page.content.strings.get(
+      this.languageService.getCurrentLanguage()
+    );
   }
 }

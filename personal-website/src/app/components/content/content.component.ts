@@ -1,6 +1,6 @@
 import { LanguageService } from './../../../services/languageService/language.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { WebpageCategoryMain } from 'src/model/webpageCategoryMain';
+import { Page } from 'src/model/page';
 
 @Component({
   selector: 'app-content',
@@ -8,7 +8,7 @@ import { WebpageCategoryMain } from 'src/model/webpageCategoryMain';
   styleUrls: ['./content.component.css'],
 })
 export class ContentComponent implements OnInit {
-  @Input() page: WebpageCategoryMain = new WebpageCategoryMain();
+  @Input() page: Page = new Page();
   constructor(private languageService: LanguageService) {}
 
   ngOnInit(): void {}
